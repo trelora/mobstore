@@ -124,29 +124,29 @@ Now, we can take some JSON data that we got from the server and inject it into o
         }
       ]
     }
+
+    postStore.inject(dataFromServer);
 ```
 
 
 Notice that with the single call to `.inject` with the nested data, we have populated all three stores with their appropriate data, and each has the correct references to all of their associations.
 
 ```javascript
-    postStore.inject(dataFromServer);
-
     postStore.posts
-    //=> [{id:42, title: "How to make an app", author: {id: 12...}, comments: [...]}]
+    // [ {id:42, title: "How to make an app", author: {id: 12...}, comments: [...]} ]
 
     peopleStore.people
-    //=> [
-      {id:12, name: "Mark Twain", posts: [...], comments: [...]},
-      {id:13, name: "Aldous Huxley", posts: [...], comments: [...]},
-      {id:14, name: "Jared Diamond", posts: [...], comments: [...]},
-    ]
+    // [
+    //   {id:12, name: "Mark Twain", posts: [...], comments: [...]},
+    //   {id:13, name: "Aldous Huxley", posts: [...], comments: [...]},
+    //   {id:14, name: "Jared Diamond", posts: [...], comments: [...]},
+    // ]
 
     commentStore.comments
-    //=> [
-      {id: 3, text: "This article is great.", post: {id: 42,...}, author: {id: 13...}}
-      {id: 4, text: "This article sucks.", post: {id: 42...}, author: {id: 14...}}
-    ]
+    // [
+    //   {id: 3, text: "This article is great.", post: {id: 42,...}, author: {id: 13...}}
+    //   {id: 4, text: "This article sucks.", post: {id: 42...}, author: {id: 14...}}
+    // ]
 ```
 
 
