@@ -17,9 +17,10 @@ Example usage is below.
 
 Here's an example where we set up three data stores, each with associations to the other two. Notice that we are very explicit about the associations we set up. Nothing is magic. Only the associations you define are populated.
 
+```javascript
     import {MobStore} from 'mobstore';
 
-    postStore = new MobStore({
+    const postStore = new MobStore({
       collectionName: "posts",  // the accessor, i.e. `postStore.posts`
       type: "post",             // this store holds items of the `post` type.
       associations: [
@@ -43,7 +44,7 @@ Here's an example where we set up three data stores, each with associations to t
       ]
     });
 
-    commentStore = new MobStore({
+    const commentStore = new MobStore({
       collectionName: "comments",
       type: "comment",
       associations: [
@@ -66,7 +67,7 @@ Here's an example where we set up three data stores, each with associations to t
       ]
     });
 
-    peopleStore = new MobStore({
+    const peopleStore = new MobStore({
       collectionName: "people",
       type: "person",
       associations: [
@@ -89,13 +90,15 @@ Here's an example where we set up three data stores, each with associations to t
         }
       ]
     });
+```
 
 
 ### Usage:
 
 Now, we can take some JSON data that we got from the server and inject it into our stores.
 
-    dataFromServer = {
+```javascript
+    const dataFromServer = {
       id: 42,
       title: "How to make an app",
       author: {
@@ -121,10 +124,12 @@ Now, we can take some JSON data that we got from the server and inject it into o
         }
       ]
     }
+```
 
 
 Notice that with the single call to `.inject` with the nested data, we have populated all three stores with their appropriate data, and each has the correct references to all of their associations.
 
+```javascript
     postStore.inject(dataFromServer);
 
     postStore.posts
@@ -142,6 +147,7 @@ Notice that with the single call to `.inject` with the nested data, we have popu
       {id: 3, text: "This article is great.", post: {id: 42,...}, author: {id: 13...}}
       {id: 4, text: "This article sucks.", post: {id: 42...}, author: {id: 14...}}
     ]
+```
 
 
 
