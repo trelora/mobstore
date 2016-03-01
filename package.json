@@ -1,6 +1,6 @@
 {
   "name": "mobstore",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Reactive datastore using mobservable (mobx)",
   "repository": "https://github.com/trelora/mobstore",
   "main": "dist.js",
