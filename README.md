@@ -149,6 +149,52 @@ commentStore.comments
 // ]
 ```
 
+All of the references are hooked up like you would expect.
+
+```javascript
+peopleStore.people[0].posts[0].comments[0].author
+// {id:13, name: "Aldous Huxley", posts: [...], comments: [...]}
+```
+
+
+### Use with React
+
+If you use this data store together with [mobx-react](https://github.com/mobxjs/mobx-react), your React components will automatically re-render when you update your data by injecting more data into any of the stores, or by changing any of the scalar values of your objects.
+
+
+```javascript
+@observer
+class PostsContainer extends React.Component {
+  render() {
+    return (
+      <PostsList
+        posts={postsStore.posts}
+      />
+    );
+  }
+}
+
+//...
+
+
+// add a new comment. by including the ids of the associations, they will get hooked up properly.
+commentStore.inject({
+  id: 5,
+  text: "Spam",
+  post: { id: 42},
+  author: { id: 12 }
+})
+
+//...
+
+// update the author's name. this will show immediately in the UI if the name field is used somewhere.
+const mark = peopleStore.people[0]
+mark.name = "Twark Main"
+
+```
+
+
+
 
 
 # Development
