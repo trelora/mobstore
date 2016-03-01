@@ -1,5 +1,5 @@
 import {MobStore} from '../index.js';
-import {isObservable, autorun} from 'mobx';
+import {isObservable, autorun, observable} from 'mobx';
 import test from 'tape';
 
 
@@ -32,10 +32,11 @@ test("MobStore inject", t => {
   let testObserver;
 
   autorun(() => {
-    testObserver = store.items;
+    if (store.items.length)
+      testObserver = store.items[0];
   });
 
-  t.deepEqual(testObserver, [],
+  t.deepEqual(testObserver, undefined,
               "as a sanity check, the testObserver starts out undefined");
 
   store.inject({
@@ -49,9 +50,8 @@ test("MobStore inject", t => {
   t.deepEqual(store.items[0], {id: 42, name: "Foo Item", type: 'item'},
               "saves the item's properites in the store");
 
-  t.deepEqual(testObserver, [{id: 42, name: "Foo Item", type: 'item'}],
+  t.deepEqual(testObserver, {id: 42, name: "Foo Item", type: 'item'},
               "an observer gets updated when an item is injected");
-
 
   store.inject({
     id: 42,
@@ -64,6 +64,9 @@ test("MobStore inject", t => {
 
   t.deepEqual(store.items[0], {id: 42, name: "Bar Item", type: 'item'},
               "injecting the same item again updates the original item");
+
+  t.deepEqual(testObserver, {id: 42, name: "Bar Item", type: 'item'},
+              "an observer gets updated when an item is updated");
 
   t.end();
 
@@ -290,7 +293,6 @@ test("MobStore inject, updating association list", t => {
 
   t.equal(listStore.find(42).listEntries[0].id, 13,
           "the parent object's association list is updated");
-
 
   t.end();
 });
