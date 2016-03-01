@@ -153,6 +153,10 @@ commentStore.comments
 
 # Development
 
+Build:
+
+    $ npm run build
+
 Run the tests:
 
     $ npm run test
