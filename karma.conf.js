@@ -20,7 +20,10 @@ module.exports = function (config) {
         preLoaders: [
           {
             test: /\.js$/,
-            exclude: [/node_modules/, /src/],
+            exclude: [
+              __dirname + "/tests",
+              /node_modules/
+            ],
             loader: 'babel'
           },
           {
@@ -39,7 +42,7 @@ module.exports = function (config) {
       },
       watch: true,
       resolve: {
-        extensions: ["", ".js", ".jsx", ".js.jsx"]
+        extensions: ["", ".js"]
       },
       devtool: 'inline-source-map',
       node: {
