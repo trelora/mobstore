@@ -5,7 +5,8 @@
   "repository": "https://github.com/trelora/mobstore",
   "main": "dist.js",
   "scripts": {
-    "test": "karma start"
+    "test": "karma start",
+    "build": "babel src --out-file dist.js"
   },
   "author": "Jeff Gran",
   "license": "MIT",
@@ -14,6 +15,7 @@
     "mobx": "^2.0.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.6.0",
     "babel-core": "^6.6.0",
     "babel-loader": "^6.2.4",
     "babel-plugin-transform-class-properties": "^6.6.0",
