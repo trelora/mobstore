@@ -1,4 +1,4 @@
-import {MobStore} from '../index.js';
+import {MobStore} from '../dist/index.js';
 import {isObservable, autorun, observable} from 'mobx';
 import test from 'tape';
 
