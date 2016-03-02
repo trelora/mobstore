@@ -2,12 +2,12 @@
     "docs": [
         {
             "location": "/", 
-            "text": "MobStore\n\n\nSource Code: [https://github.com/trelora/mobstore]\nNPM: [https://www.npmjs.com/package/mobstore]\n\n\nMobStore is a data-store layer for reactive javascript applications.\n\n\nMobStore is a thin layer on top of the brilliant Transparent Functional Reactive Programming library MobX. See \nMobX (formerly mobservable)\n for more information.\n\n\nMobStore takes hierarchical JSON data and turns it back into a graph.\n\n\nMobStore automatically hooks up bidirectional, potentially circular references based on the associations you define, and makes the entire graph reactive, so you can change any part of your data and see the results in your UI immediately.", 
+            "text": "MobStore\n\n\nSource Code: https://github.com/trelora/mobstore\nNPM: https://www.npmjs.com/package/mobstore\n\n\nMobStore is a data-store layer for reactive javascript applications.\n\n\nMobStore is a thin layer on top of the brilliant Transparent Functional Reactive Programming library MobX. See \nMobX (formerly mobservable)\n for more information.\n\n\nMobStore takes hierarchical JSON data and turns it back into a graph.\n\n\nMobStore automatically hooks up bidirectional, potentially circular references based on the associations you define, and makes the entire graph reactive, so you can change any part of your data and see the results in your UI immediately.", 
             "title": "Home"
         }, 
         {
             "location": "/#mobstore", 
-            "text": "Source Code: [https://github.com/trelora/mobstore]\nNPM: [https://www.npmjs.com/package/mobstore]  MobStore is a data-store layer for reactive javascript applications.  MobStore is a thin layer on top of the brilliant Transparent Functional Reactive Programming library MobX. See  MobX (formerly mobservable)  for more information.  MobStore takes hierarchical JSON data and turns it back into a graph.  MobStore automatically hooks up bidirectional, potentially circular references based on the associations you define, and makes the entire graph reactive, so you can change any part of your data and see the results in your UI immediately.", 
+            "text": "Source Code: https://github.com/trelora/mobstore\nNPM: https://www.npmjs.com/package/mobstore  MobStore is a data-store layer for reactive javascript applications.  MobStore is a thin layer on top of the brilliant Transparent Functional Reactive Programming library MobX. See  MobX (formerly mobservable)  for more information.  MobStore takes hierarchical JSON data and turns it back into a graph.  MobStore automatically hooks up bidirectional, potentially circular references based on the associations you define, and makes the entire graph reactive, so you can change any part of your data and see the results in your UI immediately.", 
             "title": "MobStore"
         }, 
         {
