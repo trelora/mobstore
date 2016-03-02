@@ -25,7 +25,7 @@ This is being used in production at Trelora, inc. It works great for our needs. 
 
 ### Docs
 
-Documentation and examples are available at http://trelora.github.io/mobstore/.
+Documentation and examples (works in progress!) are available at http://trelora.github.io/mobstore/.
 
 
 ### Contributing

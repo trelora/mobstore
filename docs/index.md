@@ -20,12 +20,14 @@ MobStore automatically hooks up bidirectional, potentially circular references b
 
 ```javascript
 import {MobStore} from 'mobstore';
+
 const itemStore = new MobStore({
   collectionName: 'items',
   type: 'item'
 });
 
 itemStore.inject({id: 1, name: "item one"})
+
 itemStore.find(1)
 // => {id: 1, name: "item one"}
 ```
