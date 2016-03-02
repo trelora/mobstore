@@ -2,23 +2,13 @@
     "docs": [
         {
             "location": "/", 
-            "text": "MobStore\n\n\nMobStore is a data-store layer for reactive javascript applications.\n\n\nMobStore is a thin layer on top of the brilliant Transparent Functional Reactive Programming library MobX. See \nMobX (formerly mobservable)\n for more information.\n\n\nMobStore takes hierarchical JSON data and turns it back into a graph.\n\n\nMobStore automatically hooks up bidirectional, potentially circular references based on the associations you define, and makes the entire graph reactive, so you can change any part of your data and see the results in your UI immediately.\n\n\nCurrent status\n\n\nThis is being used in production at Trelora, inc. It works great for our needs. However, we have only added the features we need as we need them, so there is definitely still missing functionality.\n\n\nMissing features\n\n\n\n\nThere is currently no way to remove data from a store.\n\n\nThere is no easy way to inject data formatted in HAL, JSONAPI, etc. Would be nice to add a parser/adapter layer to be able to easily inject different data formats.\n\n\nMobStore does not do any server communication. Not sure whether it ever will, but currently getting the actual data is up to you.\n\n\nWhat else? File an issue.", 
+            "text": "MobStore\n\n\nSource Code: [https://github.com/trelora/mobstore]\nNPM: [https://www.npmjs.com/package/mobstore]\n\n\nMobStore is a data-store layer for reactive javascript applications.\n\n\nMobStore is a thin layer on top of the brilliant Transparent Functional Reactive Programming library MobX. See \nMobX (formerly mobservable)\n for more information.\n\n\nMobStore takes hierarchical JSON data and turns it back into a graph.\n\n\nMobStore automatically hooks up bidirectional, potentially circular references based on the associations you define, and makes the entire graph reactive, so you can change any part of your data and see the results in your UI immediately.", 
             "title": "Home"
         }, 
         {
             "location": "/#mobstore", 
-            "text": "MobStore is a data-store layer for reactive javascript applications.  MobStore is a thin layer on top of the brilliant Transparent Functional Reactive Programming library MobX. See  MobX (formerly mobservable)  for more information.  MobStore takes hierarchical JSON data and turns it back into a graph.  MobStore automatically hooks up bidirectional, potentially circular references based on the associations you define, and makes the entire graph reactive, so you can change any part of your data and see the results in your UI immediately.", 
+            "text": "Source Code: [https://github.com/trelora/mobstore]\nNPM: [https://www.npmjs.com/package/mobstore]  MobStore is a data-store layer for reactive javascript applications.  MobStore is a thin layer on top of the brilliant Transparent Functional Reactive Programming library MobX. See  MobX (formerly mobservable)  for more information.  MobStore takes hierarchical JSON data and turns it back into a graph.  MobStore automatically hooks up bidirectional, potentially circular references based on the associations you define, and makes the entire graph reactive, so you can change any part of your data and see the results in your UI immediately.", 
             "title": "MobStore"
-        }, 
-        {
-            "location": "/#current-status", 
-            "text": "This is being used in production at Trelora, inc. It works great for our needs. However, we have only added the features we need as we need them, so there is definitely still missing functionality.", 
-            "title": "Current status"
-        }, 
-        {
-            "location": "/#missing-features", 
-            "text": "There is currently no way to remove data from a store.  There is no easy way to inject data formatted in HAL, JSONAPI, etc. Would be nice to add a parser/adapter layer to be able to easily inject different data formats.  MobStore does not do any server communication. Not sure whether it ever will, but currently getting the actual data is up to you.  What else? File an issue.", 
-            "title": "Missing features"
         }, 
         {
             "location": "/overview/", 
