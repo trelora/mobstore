@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/trelora/mobstore.svg?branch=master)](https://travis-ci.org/trelora/mobstore)
+[![Coverage Status](https://coveralls.io/repos/github/trelora/mobstore/badge.svg?branch=master)](https://coveralls.io/github/trelora/mobstore?branch=master)
 
 # MobStore
 
