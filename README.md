@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/trelora/mobstore.svg?branch=master)](https://travis-ci.org/trelora/mobstore)
+
 # MobStore
 
 MobStore is a data-store layer for reactive javascript applications.

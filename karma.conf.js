@@ -13,7 +13,11 @@ module.exports = function (config) {
     },
     reporters: ['dots', 'coverage'],
     coverageReporter: {
-      type: "text"
+      dir: "coverage",
+      reporters: [
+        {type: "text"},
+        {type: "lcov", subdir: "lcov"}
+      ]
     },
     webpack: {
       module: {
