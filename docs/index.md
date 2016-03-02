@@ -1,7 +1,7 @@
 # MobStore
 
-Source Code: [https://github.com/trelora/mobstore]
-NPM: [https://www.npmjs.com/package/mobstore]
+Source Code: https://github.com/trelora/mobstore
+NPM: https://www.npmjs.com/package/mobstore
 
 MobStore is a data-store layer for reactive javascript applications.
 
