@@ -446,3 +446,78 @@ test("MobStore instanceMethods", t => {
   t.end();
 
 });
+
+
+test("MobStore inject with singualar association", t => {
+  const postStore = new MobStore({
+    collectionName: 'posts',
+    type: 'post',
+    associations: [
+      {
+        key: "author",
+        type: "person",
+        plural: false
+      }
+    ]
+  });
+
+  const peopleStore = new MobStore({
+    collectionName: "people",
+    type: 'person'
+  });
+
+  postStore.inject({
+    id: 2,
+    name: "A name for a post",
+    author: {
+      id: 4,
+      name: "Jeff"
+    }
+  });
+
+  t.equal(postStore.posts[0].author.name, "Jeff",
+          "hooks up the association");
+
+
+  t.end();
+});
+
+
+test("MobStore an inverse plural key gets initialized with an array by default", t => {
+  const itemStore = new MobStore({
+    collectionName: "items",
+    type: "item",
+    associations: [
+      {
+        key: "list",
+        type: "list",
+        inverse: {
+          key: "items",
+          plural: true
+        }
+      }
+    ]
+  });
+
+  const listStore = new MobStore({
+    collectionName: "lists",
+    type: "list",
+    associations: [
+      {
+        key: "items",
+        type: "item"
+      }
+    ]
+  });
+
+  itemStore.inject({
+    id: 1,
+    name: "item name 1",
+    list: {id: 42}
+  });
+
+  t.equal(listStore.lists[0].items[0].name, "item name 1",
+          "populates the inverse plural association as an array");
+
+  t.end();
+});
