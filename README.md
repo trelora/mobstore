@@ -203,6 +203,10 @@ Build:
 
     $ npm run build
 
+Publish:
+
+    $ npm run build_and_publish
+
 Run the tests:
 
     $ npm run test

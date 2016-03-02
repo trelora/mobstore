@@ -3,7 +3,7 @@ var webpack = require('webpack');
 module.exports = function (config) {
   config.set({
     browsers: ['PhantomJS'],
-    singleRun: false,
+    singleRun: true,
     frameworks: ['tap'],
     files: [
       'webpack/tests.config.js',
