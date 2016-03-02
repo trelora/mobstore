@@ -126,12 +126,14 @@
 <p>MobStore automatically hooks up bidirectional, potentially circular references based on the associations you define, and makes the entire graph reactive, so you can change any part of your data and see the results in your UI immediately.</p>
 <h2 id="hello-mobstore">Hello MobStore</h2>
 <pre><code class="javascript">import {MobStore} from 'mobstore';
+
 const itemStore = new MobStore({
   collectionName: 'items',
   type: 'item'
 });
 
 itemStore.inject({id: 1, name: &quot;item one&quot;})
+
 itemStore.find(1)
 // =&gt; {id: 1, name: &quot;item one&quot;}
 </code></pre>
@@ -180,5 +182,5 @@ itemStore.find(1)
 
 <!--
 MkDocs version : 0.15.3
-Build Date UTC : 2016-03-02 06:30:46.131021
+Build Date UTC : 2016-03-02 06:34:22.700173
 -->
