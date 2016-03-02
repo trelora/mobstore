@@ -1,1 +1,0 @@
-{"name":"Mobstore","tagline":"A javascript data-store layer based on the excellent MobX TFRP library","body":"### MobStore Docs\r\n\r\nTest page for the docs\r\n\r\n    itemStore = new MobStore({\r\n      collectionName: \"items\",\r\n      type: \"item\"\r\n    });","google":"","note":"Don't delete this file! It's used internally to help with page regeneration."}
