@@ -23,12 +23,12 @@ This is being used in production at Trelora, inc. It works great for our needs. 
 * MobStore does not do any server communication. Not sure whether it ever will, but currently getting the actual data is up to you.
 * What else? File an issue.
 
-### Docs
+## Docs
 
 Documentation and examples (works in progress!) are available at http://trelora.github.io/mobstore/.
 
 
-### Contributing
+## Contributing
 
 Pull requests welcome.
 
