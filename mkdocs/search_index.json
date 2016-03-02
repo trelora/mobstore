@@ -2,13 +2,28 @@
     "docs": [
         {
             "location": "/", 
-            "text": "MobStore\n\n\nSource Code: https://github.com/trelora/mobstore\nNPM: https://www.npmjs.com/package/mobstore\n\n\nMobStore is a data-store layer for reactive javascript applications.\n\n\nMobStore is a thin layer on top of the brilliant Transparent Functional Reactive Programming library MobX. See \nMobX (formerly mobservable)\n for more information.\n\n\nMobStore takes hierarchical JSON data and turns it back into a graph.\n\n\nMobStore automatically hooks up bidirectional, potentially circular references based on the associations you define, and makes the entire graph reactive, so you can change any part of your data and see the results in your UI immediately.", 
+            "text": "MobStore\n\n\nLinks\n\n\n\n\nSource Code on Github\n\n\nNPM Package\n\n\n\n\nDescription\n\n\nMobStore is a data-store layer for reactive javascript applications.\n\n\nMobStore is a thin layer on top of the brilliant Transparent Functional Reactive Programming library MobX. See \nMobX (formerly mobservable)\n for more information.\n\n\nMobStore takes hierarchical JSON data and turns it back into a graph.\n\n\nMobStore automatically hooks up bidirectional, potentially circular references based on the associations you define, and makes the entire graph reactive, so you can change any part of your data and see the results in your UI immediately.\n\n\nHello MobStore\n\n\nimport {MobStore} from 'mobstore';\nconst itemStore = new MobStore({\n  collectionName: 'items',\n  type: 'item'\n});\n\nitemStore.inject({id: 1, name: \nitem one\n})\nitemStore.find(1)\n// =\n {id: 1, name: \nitem one\n}", 
             "title": "Home"
         }, 
         {
             "location": "/#mobstore", 
-            "text": "Source Code: https://github.com/trelora/mobstore\nNPM: https://www.npmjs.com/package/mobstore  MobStore is a data-store layer for reactive javascript applications.  MobStore is a thin layer on top of the brilliant Transparent Functional Reactive Programming library MobX. See  MobX (formerly mobservable)  for more information.  MobStore takes hierarchical JSON data and turns it back into a graph.  MobStore automatically hooks up bidirectional, potentially circular references based on the associations you define, and makes the entire graph reactive, so you can change any part of your data and see the results in your UI immediately.", 
+            "text": "", 
             "title": "MobStore"
+        }, 
+        {
+            "location": "/#links", 
+            "text": "Source Code on Github  NPM Package", 
+            "title": "Links"
+        }, 
+        {
+            "location": "/#description", 
+            "text": "MobStore is a data-store layer for reactive javascript applications.  MobStore is a thin layer on top of the brilliant Transparent Functional Reactive Programming library MobX. See  MobX (formerly mobservable)  for more information.  MobStore takes hierarchical JSON data and turns it back into a graph.  MobStore automatically hooks up bidirectional, potentially circular references based on the associations you define, and makes the entire graph reactive, so you can change any part of your data and see the results in your UI immediately.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/#hello-mobstore", 
+            "text": "import {MobStore} from 'mobstore';\nconst itemStore = new MobStore({\n  collectionName: 'items',\n  type: 'item'\n});\n\nitemStore.inject({id: 1, name:  item one })\nitemStore.find(1)\n// =  {id: 1, name:  item one }", 
+            "title": "Hello MobStore"
         }, 
         {
             "location": "/overview/", 

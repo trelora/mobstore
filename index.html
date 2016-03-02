@@ -62,6 +62,12 @@
             
                 <li class="toctree-l3"><a href="#mobstore">MobStore</a></li>
                 
+                    <li><a class="toctree-l4" href="#links">Links</a></li>
+                
+                    <li><a class="toctree-l4" href="#description">Description</a></li>
+                
+                    <li><a class="toctree-l4" href="#hello-mobstore">Hello MobStore</a></li>
+                
             
             </ul>
         
@@ -108,12 +114,27 @@
             <div class="section">
               
                 <h1 id="mobstore">MobStore</h1>
-<p>Source Code: https://github.com/trelora/mobstore
-NPM: https://www.npmjs.com/package/mobstore</p>
+<h2 id="links">Links</h2>
+<ul>
+<li><a href="https://github.com/trelora/mobstore">Source Code on Github</a></li>
+<li><a href="https://www.npmjs.com/package/mobstore">NPM Package</a></li>
+</ul>
+<h2 id="description">Description</h2>
 <p>MobStore is a data-store layer for reactive javascript applications.</p>
 <p>MobStore is a thin layer on top of the brilliant Transparent Functional Reactive Programming library MobX. See <a href="http://mobxjs.github.io/mobx/">MobX (formerly mobservable)</a> for more information.</p>
 <p>MobStore takes hierarchical JSON data and turns it back into a graph.</p>
 <p>MobStore automatically hooks up bidirectional, potentially circular references based on the associations you define, and makes the entire graph reactive, so you can change any part of your data and see the results in your UI immediately.</p>
+<h2 id="hello-mobstore">Hello MobStore</h2>
+<pre><code class="javascript">import {MobStore} from 'mobstore';
+const itemStore = new MobStore({
+  collectionName: 'items',
+  type: 'item'
+});
+
+itemStore.inject({id: 1, name: &quot;item one&quot;})
+itemStore.find(1)
+// =&gt; {id: 1, name: &quot;item one&quot;}
+</code></pre>
               
             </div>
           </div>
@@ -159,5 +180,5 @@ NPM: https://www.npmjs.com/package/mobstore</p>
 
 <!--
 MkDocs version : 0.15.3
-Build Date UTC : 2016-03-02 06:25:37.360278
+Build Date UTC : 2016-03-02 06:30:46.131021
 -->
