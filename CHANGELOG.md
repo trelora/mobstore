@@ -1,3 +1,7 @@
+### 0.3.1
+
+- bugfix: .injecting an object with an association being null did not overwrite the old value. now it will overwrite with null for singular association, or observable([]) for plural association.
+
 ### 0.3.0
 
 - fix package.json: MobX is now a peerDependency

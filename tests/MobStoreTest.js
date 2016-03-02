@@ -521,3 +521,97 @@ test("MobStore an inverse plural key gets initialized with an array by default",
 
   t.end();
 });
+
+
+test("MobStore overwriting a singular association with null", t => {
+
+  const postStore = new MobStore({
+    collectionName: 'posts',
+    type: 'post',
+    associations: [
+      {
+        key: "author",
+        type: "person",
+        plural: false
+      }
+    ]
+  });
+
+  const peopleStore = new MobStore({
+    collectionName: "people",
+    type: 'person'
+  });
+
+
+  postStore.inject({
+    id: 2,
+    name: "A name for a post",
+    author: {
+      id: 4,
+      name: "Jeff"
+    }
+  });
+
+  t.equal(postStore.posts[0].author.name, "Jeff",
+          "hooks up the association");
+
+  postStore.inject({
+    id: 2,
+    name: "A name for a post",
+    author: null
+  });
+
+  t.equal(postStore.posts[0].author, null,
+          "replaces the association with null");
+
+  t.end();
+
+});
+
+
+test("MobStore overwriting a plural association with null", t => {
+
+  const postStore = new MobStore({
+    collectionName: 'posts',
+    type: 'post',
+    associations: [
+      {
+        key: "authors",
+        type: "person",
+        plural: true
+      }
+    ]
+  });
+
+  const peopleStore = new MobStore({
+    collectionName: "people",
+    type: 'person'
+  });
+
+
+  postStore.inject({
+    id: 2,
+    name: "A name for a post",
+    authors: [
+      {
+        id: 4,
+        name: "Jeff"
+      }
+    ]
+  });
+
+  t.equal(postStore.posts[0].authors[0].name, "Jeff",
+          "hooks up the association");
+
+  postStore.inject({
+    id: 2,
+    name: "A name for a post",
+    authors: null
+  });
+
+  t.equal(postStore.posts[0].authors.length, 0,
+          "replaces the association with []");
+
+  t.end();
+
+});
