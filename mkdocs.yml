@@ -1,4 +1,4 @@
-site_name: MobStore
+site_name: MobStore Documentation
 theme: readthedocs
 pages:
   - Home: index.md

@@ -1,5 +1,3 @@
-# Overview
-
 ## Setup
 
 Here's an example where we set up three data stores, each with associations to the other two. Notice that we are very explicit about the associations we set up. Nothing is magic. Only the associations you define are populated.

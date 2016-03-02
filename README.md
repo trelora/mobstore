@@ -33,7 +33,7 @@ Documentation and examples (works in progress!) are available at http://trelora.
 Pull requests welcome.
 
 
-# Development
+## Development
 
 Build:
 
@@ -53,4 +53,4 @@ Preview the docs:
 
 Deploy the docs:
 
-    $ mkdocs gh-deploy --clean
+    $ mkdocs build --clean && mkdocs gh-deploy --clean

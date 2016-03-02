@@ -1,5 +1,3 @@
-# MobStore
-
 ## Links
 
 * [Source Code on Github](https://github.com/trelora/mobstore)
