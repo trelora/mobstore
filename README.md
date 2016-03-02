@@ -11,8 +11,17 @@ MobStore takes hierarchical JSON data and turns it back into a graph.
 
 MobStore automatically hooks up bidirectional, potentially circular references based on the associations you define, and makes the entire graph reactive, so you can change any part of your data and see the results in your UI immediately.
 
-Example usage is below.
 
+### Current status
+
+This is being used in production at Trelora, inc. It works great for our needs. However, we have only added the features we need as we need them, so there is definitely still missing functionality.
+
+### Missing features
+
+* There is currently no way to remove data from a store.
+* There is no easy way to inject data formatted in HAL, JSONAPI, etc. Would be nice to add a parser/adapter layer to be able to easily inject different data formats.
+* MobStore does not do any server communication. Not sure whether it ever will, but currently getting the actual data is up to you.
+* What else? File an issue.
 
 ## Example
 
