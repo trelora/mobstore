@@ -1,0 +1,5 @@
+site_name: MobStore
+theme: readthedocs
+pages:
+  - Home: index.md
+  - Overview: overview.md
