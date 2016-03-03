@@ -1,4 +1,5 @@
 import {observable, extendObservable, isObservable, transaction} from 'mobx';
+import Type from './Type';
 
 let stores = [];
 
@@ -28,21 +29,16 @@ export default class MobStore {
    */
   constructor({collectionName, type, associations, instanceMethods, afterInject, afterAdd, afterUpdate}) {
     this.collectionName = collectionName;
-    this.type = type;
-    this.associations = associations || [];
-    this.afterAdd = afterAdd;
-    this.afterUpdate = afterUpdate;
-    this.afterInject = afterInject;
 
-    // make a constructor for instances so we can have instance methods
-    MobStore[this.type] = renameFunction(this.type, function (obj) {
-      extendObservable(this, obj);
-      this.type = type; // using the closure - this is the type passed to the store's constructor
+    /// TODO reject/throw if type by this name already exists.
+    this.type = new Type({
+      associations,
+      afterAdd,
+      afterUpdate,
+      afterInject,
+      instanceMethods,
+      name: type
     });
-
-    MobStore[this.type].prototype = (instanceMethods || {});
-
-    this.instanceConstructor = MobStore[this.type]; // in case you need it externally
 
     extendObservable(this, {
       [collectionName]: []
@@ -61,142 +57,42 @@ export default class MobStore {
    * @param {number} level - internal use only
    * @param {function[]} callbackFns - internal use only
    */
-  inject(jsondata, level = 0, callbackFns = []) {
+  inject(jsondata) {
+    const objs = MobStore.wrap(jsondata);
+
     return transaction(() => {
-      const objs = MobStore.wrap(jsondata);
-
-      // partition out the ones we need to add vs update
       const instances = objs.map((obj) => {
-        let existing = this.find(obj.id);
-        let instance;
-        let changes = {};
-        if (existing) {
-          changes = MobStore.diff(existing, obj);
+        const instance = this.pushOrMerge(obj);
+        const associatedObjects = this.type.associatedObjectsFor(obj);
 
-          // update the properties, making sure they are all observable
-          extendObservable(existing, obj);
-          instance = existing;
-
-          // update ONLY callback
-          if (Object.keys(changes).length && typeof this.afterUpdate === 'function') {
-            let that = this;
-            callbackFns.push(() => { that.afterUpdate(instance, changes); });
+        associatedObjects.forEach(({typeName, association, objects}) => {
+          const assocStore = MobStore.storeForType(typeName);
+          let aInstances;
+          if (objects) {
+            aInstances = assocStore.inject(objects);
           }
-        } else {
-          // instantiate and add a new instance to the store
-          instance = new MobStore[this.type](obj);
-          this[this.collectionName].push(instance);
 
-          // add ONLY callback
-          if (typeof this.afterAdd === 'function') {
-            let that = this;
-            callbackFns.push(() => { that.afterAdd(instance, changes); });
-          }
-        }
-
-        // add OR update callback
-        if (typeof this.afterInject === 'function') {
-          let that = this;
-          callbackFns.push(() => { that.afterInject(instance, changes); });
-        }
+          association.assign(instance, aInstances);
+        });
 
         return instance;
       });
-
-
-
-
-      // inject associations into their stores too.
-      if (this.associations && this.associations.length) {
-        this.associations.forEach((assoc) => {
-
-          const assocStores = stores.filter(s => s.type == assoc.type);
-
-          assocStores.forEach((assocStore) => {
-            objs.forEach((obj) => {
-              if (obj.hasOwnProperty(assoc.key)) {
-
-                if (obj[assoc.key]) {
-
-                  // inject the associated objects into their store
-                  //console.log(`about to inject associated objects: ${this.type}:${obj.id} -> key: ${assoc.key}, type: ${assoc.type}`, obj[assoc.key]);
-                  const returnvals = assocStore.inject(obj[assoc.key], level + 1, callbackFns);
-                  const results = returnvals.instances;
-                  callbackFns.concat(returnvals.callbackFns);
-
-                  if (assoc.plural) {
-                    //console.log(`in ${this.type}:${obj.id}, setting ${assoc.key}`, results);
-                    this.find(obj.id)[assoc.key] = results;
-                  } else {
-                    //console.log(`in ${this.type}:${obj.id}, setting ${assoc.key}`, results[0]);
-                    this.find(obj.id)[assoc.key] = results[0];
-                  }
-
-                  // set up the reciprocal relationship too, if defined.
-                  if (assoc.inverse) {
-                    //console.log("inverse", assoc);
-                    results.forEach((aobj) => {
-                      if (assoc.inverse.plural) {
-                        aobj[assoc.inverse.key] || (aobj[assoc.inverse.key] = []);
-
-                        // merge or add to assoc
-                        if (aobj[assoc.inverse.key].some(t=>t.id == obj.id)) {
-                          // it already has it, should be automatically up to date
-                          // console.log(`skipping plural, ${this.type}:${obj.id} -> ${assocStore.type}:${aobj.id}`);
-                          // console.log("skipping because already exists:", aobj[assoc.inverse.key].find(o => o.id == obj.id));
-                          // console.log("store has:", assocStore.find(aobj.id));
-                        } else {
-                          //console.log("pushing", this.find(obj.id));
-                          aobj[assoc.inverse.key].push(this.find(obj.id));
-                        }
-
-                      } else {
-                        //console.log('singular', aobj, assoc, this.find(obj.id));
-                        if (aobj[assoc.inverse.key]) {
-                          // already there, do nothing.
-                          //console.log(`skipping singular, ${this.type}:${obj.id} -> ${assocStore.type}:${aobj.id}`);
-                        } else {
-                          //console.log(`setting inverse, ${this.type}:${obj.id} -> ${assocStore.type}:${aobj.id}`);
-                          //console.log("set to:", this.find(obj.id));
-                          aobj[assoc.inverse.key] = this.find(obj.id);
-                        }
-                      }
-                    });
-                  }
-                } else {
-                  if (assoc.plural) {
-                    console.warn("overwriting plural assocation with null is bad. using [] instead");
-                    this.find(obj.id)[assoc.key] = [];
-                  } else {
-                    this.find(obj.id)[assoc.key] = null;
-                  }
-                }
-              }
-            });
-          });
-
-        });
-      }
-
-      // now, if we're done with all recursive injecting, call the callbacks
-      if (level == 0) {
-        callbackFns.forEach((fn) => {
-          fn();
-        });
-      }
-
-      // return the newly added instances. TODO do we really need to loop
-      // through again? arent they literally the same instances?
-      const ids = objs.map(obj => obj.id);
-      const ret_instances = this.collection.filter((item) => {
-        return ids.includes(item.id);
-      });
-      return {
-        callbackFns,
-        instances: ret_instances
-      };
+      return instances;
     });
 
+  }
+
+  pushOrMerge(object) {
+    let instance;
+    let existing = this.find(object.id);
+    if (existing) {
+      instance = existing;
+      extendObservable(instance, object);
+    } else {
+      instance = new this.type.instanceConstructor(object);
+      this[this.collectionName].push(instance);
+    }
+    return instance;
   }
 
   /**
@@ -241,18 +137,12 @@ export default class MobStore {
     return changes;
   }
 
+  static storeForType(typeName) {
+    return stores.find(s => s.type.name == typeName);
+  }
+
+  static clearStores() {
+    stores = [];
+  }
+
 }
-
-
-/**
- * JavaScript Rename Function
- * @author Nate Ferrero
- * @license Public Domain
- * @date Apr 5th, 2014
- */
-// Todo: can avoid this evil hack when browsers catch up with the spec:
-// http://stackoverflow.com/questions/9479046/is-there-any-non-eval-way-to-create-a-function-with-a-runtime-determined-name
-var renameFunction = function (name, fn) {
-  return (new Function("return function (call) { return function " + name +
-                       " () { return call(this, arguments) }; };")())(Function.apply.bind(fn));
-};

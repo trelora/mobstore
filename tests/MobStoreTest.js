@@ -4,6 +4,7 @@ import test from 'tape';
 
 
 test("MobStore collection", t => {
+  MobStore.clearStores();
 
   const store = new MobStore({
     collectionName: "items",
@@ -24,6 +25,8 @@ test("MobStore collection", t => {
 
 
 test("MobStore inject", t => {
+  MobStore.clearStores();
+
   const store = new MobStore({
     collectionName: "items",
     type: "item"
@@ -74,6 +77,8 @@ test("MobStore inject", t => {
 
 
 test("MobStore find", t => {
+  MobStore.clearStores();
+
   const store = new MobStore({
     collectionName: "items",
     type: "item"
@@ -100,6 +105,8 @@ test("MobStore find", t => {
 });
 
 test("MobStore findIndex", t => {
+  MobStore.clearStores();
+
   const store = new MobStore({
     collectionName: "items",
     type: "item"
@@ -145,6 +152,8 @@ test("MobStore.wrap", t => {
 
 
 test("MobStore inject with associations", t => {
+  MobStore.clearStores();
+
   const itemStore = new MobStore({
     collectionName: "items",
     type: "item"
@@ -248,6 +257,7 @@ test("MobStore inject with associations", t => {
 
 
 test("MobStore inject, updating association list", t => {
+  MobStore.clearStores();
 
   const itemStore = new MobStore({
     collectionName: "items",
@@ -299,6 +309,8 @@ test("MobStore inject, updating association list", t => {
 
 
 test('MobStore associations inverse', t => {
+  MobStore.clearStores();
+
   const itemStore = new MobStore({
     collectionName: "items",
     type: "item",
@@ -347,6 +359,7 @@ test('MobStore associations inverse', t => {
 });
 
 test("MobStore callbacks", t => {
+  MobStore.clearStores();
 
   let calledMethods = {};
   let order = 1;
@@ -419,6 +432,8 @@ test("MobStore callbacks", t => {
 
 
 test("MobStore instanceMethods", t => {
+  MobStore.clearStores();
+
   const itemStore = new MobStore({
     collectionName: "items",
     type: "item",
@@ -449,6 +464,8 @@ test("MobStore instanceMethods", t => {
 
 
 test("MobStore inject with singualar association", t => {
+  MobStore.clearStores();
+
   const postStore = new MobStore({
     collectionName: 'posts',
     type: 'post',
@@ -484,6 +501,8 @@ test("MobStore inject with singualar association", t => {
 
 
 test("MobStore an inverse plural key gets initialized with an array by default", t => {
+  MobStore.clearStores();
+
   const itemStore = new MobStore({
     collectionName: "items",
     type: "item",
@@ -524,6 +543,7 @@ test("MobStore an inverse plural key gets initialized with an array by default",
 
 
 test("MobStore overwriting a singular association with null", t => {
+  MobStore.clearStores();
 
   const postStore = new MobStore({
     collectionName: 'posts',
@@ -570,6 +590,7 @@ test("MobStore overwriting a singular association with null", t => {
 
 
 test("MobStore overwriting a plural association with null", t => {
+  MobStore.clearStores();
 
   const postStore = new MobStore({
     collectionName: 'posts',
