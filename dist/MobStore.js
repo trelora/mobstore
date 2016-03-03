@@ -153,53 +153,63 @@ var MobStore = function () {
 
             assocStores.forEach(function (assocStore) {
               objs.forEach(function (obj) {
-                if (obj[assoc.key]) {
+                if (obj.hasOwnProperty(assoc.key)) {
 
-                  // inject the associated objects into their store
-                  //console.log(`about to inject associated objects: ${this.type}:${obj.id} -> key: ${assoc.key}, type: ${assoc.type}`, obj[assoc.key]);
-                  var returnvals = assocStore.inject(obj[assoc.key], level + 1, callbackFns);
-                  var results = returnvals.instances;
-                  callbackFns.concat(returnvals.callbackFns);
+                  if (obj[assoc.key]) {
 
-                  if (assoc.plural) {
-                    //console.log(`in ${this.type}:${obj.id}, setting ${assoc.key}`, results);
-                    _this.find(obj.id)[assoc.key] = results;
+                    // inject the associated objects into their store
+                    //console.log(`about to inject associated objects: ${this.type}:${obj.id} -> key: ${assoc.key}, type: ${assoc.type}`, obj[assoc.key]);
+                    var returnvals = assocStore.inject(obj[assoc.key], level + 1, callbackFns);
+                    var results = returnvals.instances;
+                    callbackFns.concat(returnvals.callbackFns);
+
+                    if (assoc.plural) {
+                      //console.log(`in ${this.type}:${obj.id}, setting ${assoc.key}`, results);
+                      _this.find(obj.id)[assoc.key] = results;
+                    } else {
+                      //console.log(`in ${this.type}:${obj.id}, setting ${assoc.key}`, results[0]);
+                      _this.find(obj.id)[assoc.key] = results[0];
+                    }
+
+                    // set up the reciprocal relationship too, if defined.
+                    if (assoc.inverse) {
+                      //console.log("inverse", assoc);
+                      results.forEach(function (aobj) {
+                        if (assoc.inverse.plural) {
+                          aobj[assoc.inverse.key] || (aobj[assoc.inverse.key] = []);
+
+                          // merge or add to assoc
+                          if (aobj[assoc.inverse.key].some(function (t) {
+                            return t.id == obj.id;
+                          })) {
+                            // it already has it, should be automatically up to date
+                            // console.log(`skipping plural, ${this.type}:${obj.id} -> ${assocStore.type}:${aobj.id}`);
+                            // console.log("skipping because already exists:", aobj[assoc.inverse.key].find(o => o.id == obj.id));
+                            // console.log("store has:", assocStore.find(aobj.id));
+                          } else {
+                              //console.log("pushing", this.find(obj.id));
+                              aobj[assoc.inverse.key].push(_this.find(obj.id));
+                            }
+                        } else {
+                          //console.log('singular', aobj, assoc, this.find(obj.id));
+                          if (aobj[assoc.inverse.key]) {
+                            // already there, do nothing.
+                            //console.log(`skipping singular, ${this.type}:${obj.id} -> ${assocStore.type}:${aobj.id}`);
+                          } else {
+                              //console.log(`setting inverse, ${this.type}:${obj.id} -> ${assocStore.type}:${aobj.id}`);
+                              //console.log("set to:", this.find(obj.id));
+                              aobj[assoc.inverse.key] = _this.find(obj.id);
+                            }
+                        }
+                      });
+                    }
                   } else {
-                    //console.log(`in ${this.type}:${obj.id}, setting ${assoc.key}`, results[0]);
-                    _this.find(obj.id)[assoc.key] = results[0];
-                  }
-
-                  // set up the reciprocal relationship too, if defined.
-                  if (assoc.inverse) {
-                    //console.log("inverse", assoc);
-                    results.forEach(function (aobj) {
-                      if (assoc.inverse.plural) {
-                        aobj[assoc.inverse.key] || (aobj[assoc.inverse.key] = []);
-
-                        // merge or add to assoc
-                        if (aobj[assoc.inverse.key].some(function (t) {
-                          return t.id == obj.id;
-                        })) {
-                          // it already has it, should be automatically up to date
-                          // console.log(`skipping plural, ${this.type}:${obj.id} -> ${assocStore.type}:${aobj.id}`);
-                          // console.log("skipping because already exists:", aobj[assoc.inverse.key].find(o => o.id == obj.id));
-                          // console.log("store has:", assocStore.find(aobj.id));
-                        } else {
-                            //console.log("pushing", this.find(obj.id));
-                            aobj[assoc.inverse.key].push(_this.find(obj.id));
-                          }
-                      } else {
-                        //console.log('singular', aobj, assoc, this.find(obj.id));
-                        if (aobj[assoc.inverse.key]) {
-                          // already there, do nothing.
-                          //console.log(`skipping singular, ${this.type}:${obj.id} -> ${assocStore.type}:${aobj.id}`);
-                        } else {
-                            //console.log(`setting inverse, ${this.type}:${obj.id} -> ${assocStore.type}:${aobj.id}`);
-                            //console.log("set to:", this.find(obj.id));
-                            aobj[assoc.inverse.key] = _this.find(obj.id);
-                          }
-                      }
-                    });
+                    if (assoc.plural) {
+                      console.warn("overwriting plural assocation with null is bad. using [] instead");
+                      _this.find(obj.id)[assoc.key] = [];
+                    } else {
+                      _this.find(obj.id)[assoc.key] = null;
+                    }
                   }
                 }
               });
