@@ -1,4 +1,3 @@
-import MobStore from './MobStore';
 import {extendObservable} from 'mobx';
 
 export default class Association {
@@ -9,8 +8,9 @@ export default class Association {
     this.inverse = inverse || null;
   }
 
+  // TODO clean this up even more? PluralAssociation vs SingularAssociation ?
+  // assocValues ALWAYS comes in as an array (or null), even for singular associations.
   assign(object, assocValues) {
-
     if (undefined == assocValues) {
       if (this.plural) {
         // TODO console.warn
@@ -20,6 +20,7 @@ export default class Association {
       }
     } else {
       if (this.plural) {
+        // TODO console.warn unless assocvalues instanceof Array
         object[this.key] = assocValues;
       } else {
         // TODO throw unless length == 1
@@ -27,7 +28,7 @@ export default class Association {
       }
     }
 
-    if (undefined == this.inverse) return;
+    if (null == this.inverse) return;
 
     assocValues.forEach((aObject) => {
       if (this.inverse.plural) {

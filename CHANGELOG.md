@@ -1,3 +1,8 @@
+### 0.4.0
+
+- major refactor of the code for clarity and cleanliness
+- fix major performance issue by only making newly added keys observable, instead of grossly making ALL keys observable again. this takes effect when injecting the same (or slightly updated) object more than once to a store.
+
 ### 0.3.1
 
 - bugfix: .injecting an object with an association being null did not overwrite the old value. now it will overwrite with null for singular association, or observable([]) for plural association.

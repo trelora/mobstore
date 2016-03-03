@@ -33,12 +33,13 @@ export default class MobStore {
     /// TODO reject/throw if type by this name already exists.
     this.type = new Type({
       associations,
-      afterAdd,
-      afterUpdate,
-      afterInject,
       instanceMethods,
       name: type
     });
+
+    this.afterAdd = afterAdd;
+    this.afterUpdate = afterUpdate;
+    this.afterInject = afterInject;
 
     extendObservable(this, {
       [collectionName]: []
@@ -57,43 +58,77 @@ export default class MobStore {
    * @param {number} level - internal use only
    * @param {function[]} callbackFns - internal use only
    */
-  inject(jsondata) {
+  inject(jsondata, level = 0, callbackFns = []) {
     const objs = MobStore.wrap(jsondata);
 
     return transaction(() => {
       const instances = objs.map((obj) => {
-        const instance = this.pushOrMerge(obj);
+        const {instance, callbacks} = this.pushOrMerge(obj);
+        callbackFns = callbackFns.concat(callbacks);
         const associatedObjects = this.type.associatedObjectsFor(obj);
 
-        associatedObjects.forEach(({typeName, association, objects}) => {
+        associatedObjects.forEach(({typeName, association, value}) => {
           const assocStore = MobStore.storeForType(typeName);
           let aInstances;
-          if (objects) {
-            aInstances = assocStore.inject(objects);
+          if (value) {
+            let result = assocStore.inject(value, level + 1, callbackFns);
+            aInstances = result.instances;
+            callbackFns = callbackFns.concat(result.callbackFns);
           }
-
           association.assign(instance, aInstances);
         });
 
         return instance;
       });
-      return instances;
+
+      if (level == 0) {
+        callbackFns.forEach((fn) => {
+          fn();
+        });
+        return instances;
+      } else {
+        return {
+          instances,
+          callbackFns,
+          level
+        };
+      }
     });
 
   }
 
   pushOrMerge(object) {
-    let instance;
-    let existing = this.find(object.id);
-    if (existing) {
-      instance = existing;
-      extendObservable(instance, object);
+    let callbacks = [];
+    let instance = this.find(object.id);
+    if (instance) {
+      const diff = MobStore.diff(instance, object);
+      for (let key in diff) {
+        if (instance.hasOwnProperty[key]) {
+          instance[key] = diff[key].newValue;
+        } else {
+          extendObservable(instance, {
+            [key]: diff[key].newValue
+          });
+        }
+      }
+      if (Object.keys(diff).length && typeof this.afterUpdate == 'function') {
+        callbacks.push(this.afterUpdate.bind(instance));
+      }
     } else {
       instance = new this.type.instanceConstructor(object);
       this[this.collectionName].push(instance);
+      if (typeof this.afterAdd == 'function') {
+        callbacks.push(this.afterAdd.bind(instance));
+      }
     }
-    return instance;
+
+    if (typeof this.afterInject == 'function') {
+      callbacks.push(this.afterInject.bind(instance));
+    }
+
+    return {instance, callbacks};
   }
+
 
   /**
    * Select one item from the collection, if it is in the collection.
@@ -127,7 +162,7 @@ export default class MobStore {
   static diff(oldOne, newOne) {
     let changes = {};
     for(let key in newOne) {
-      if (newOne.hasOwnProperty(key) && newOne[key] !== oldOne[key]) {
+      if (newOne.hasOwnProperty(key) && newOne[key] != oldOne[key]) {
         changes[key] = {
           oldValue: oldOne[key],
           newValue: newOne[key]

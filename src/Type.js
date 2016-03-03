@@ -4,11 +4,8 @@ import Association from './Association';
 
 export default class Type {
 
-  constructor({name, associations, afterAdd, afterUpdate, afterInject, instanceMethods }) {
+  constructor({name, associations, instanceMethods }) {
     this.name = name;
-    this.afterAdd = afterAdd;
-    this.afterUpdate = afterUpdate;
-    this.afterInject = afterInject;
     this.associations = (associations || []).map((a) => {
       return new Association(a);
     });
@@ -31,7 +28,7 @@ export default class Type {
         returnData.push({
           association,
           typeName: association.typeName,
-          objects: obj[association.key]
+          value: obj[association.key]
         });
       }
     });
