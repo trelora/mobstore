@@ -73,6 +73,8 @@ var MobStore = function () {
 
     (0, _mobx.extendObservable)(this, _defineProperty({}, collectionName, []));
 
+    this.injectCallbackCache = [];
+
     stores.push(this);
   }
 
@@ -101,7 +103,7 @@ var MobStore = function () {
           var instance = _pushOrMerge.instance;
           var callbacks = _pushOrMerge.callbacks;
 
-          callbackFns = callbackFns.concat(callbacks);
+          callbackFns.push.apply(callbacks);
           var associatedObjects = _this.type.associatedObjectsFor(obj);
 
           associatedObjects.forEach(function (_ref2) {
@@ -114,7 +116,7 @@ var MobStore = function () {
             if (value) {
               var result = assocStore.inject(value, level + 1, callbackFns);
               aInstances = result.instances;
-              callbackFns = callbackFns.concat(result.callbackFns);
+              callbackFns = result.callbackFns;
             }
             association.assign(instance, aInstances);
           });
@@ -123,6 +125,7 @@ var MobStore = function () {
         });
 
         if (level == 0) {
+          _this.injectCallbackCache.length = 0; // clears the array
           callbackFns.forEach(function (fn) {
             fn();
           });
@@ -161,8 +164,11 @@ var MobStore = function () {
         }
       }
 
-      if (typeof this.afterInject == 'function') {
+      if (typeof this.afterInject == 'function' && !this.injectCallbackCache.includes(this.type + ':' + instance.id)) {
         callbacks.push(this.afterInject.bind(instance));
+        // keep a list of which ones we've already added, because it's possible to pass over the same
+        // object twice in the same injection
+        this.injectCallbackCache.push(this.type + ':' + instance.id);
       }
 
       return { instance: instance, callbacks: callbacks };

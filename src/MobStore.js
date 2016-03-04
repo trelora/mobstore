@@ -45,6 +45,8 @@ export default class MobStore {
       [collectionName]: []
     });
 
+    this.injectCallbackCache = [];
+
     stores.push(this);
   }
 
@@ -64,7 +66,7 @@ export default class MobStore {
     return transaction(() => {
       const instances = objs.map((obj) => {
         const {instance, callbacks} = this.pushOrMerge(obj);
-        callbackFns = callbackFns.concat(callbacks);
+        callbackFns.push.apply(callbacks);
         const associatedObjects = this.type.associatedObjectsFor(obj);
 
         associatedObjects.forEach(({typeName, association, value}) => {
@@ -73,7 +75,7 @@ export default class MobStore {
           if (value) {
             let result = assocStore.inject(value, level + 1, callbackFns);
             aInstances = result.instances;
-            callbackFns = callbackFns.concat(result.callbackFns);
+            callbackFns = result.callbackFns;
           }
           association.assign(instance, aInstances);
         });
@@ -81,7 +83,9 @@ export default class MobStore {
         return instance;
       });
 
+
       if (level == 0) {
+        this.injectCallbackCache.length = 0; // clears the array
         callbackFns.forEach((fn) => {
           fn();
         });
@@ -122,8 +126,11 @@ export default class MobStore {
       }
     }
 
-    if (typeof this.afterInject == 'function') {
+    if (typeof this.afterInject == 'function' && !this.injectCallbackCache.includes(`${this.type}:${instance.id}`)) {
       callbacks.push(this.afterInject.bind(instance));
+      // keep a list of which ones we've already added, because it's possible to pass over the same
+      // object twice in the same injection
+      this.injectCallbackCache.push(`${this.type}:${instance.id}`);
     }
 
     return {instance, callbacks};
