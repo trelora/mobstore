@@ -66,7 +66,7 @@ export default class MobStore {
     return transaction(() => {
       const instances = objs.map((obj) => {
         const {instance, callbacks} = this.pushOrMerge(obj);
-        callbackFns.push.apply(callbacks);
+        MobStore.merge(callbackFns,callbacks);
         const associatedObjects = this.type.associatedObjectsFor(obj);
 
         associatedObjects.forEach(({typeName, association, value}) => {
@@ -116,18 +116,18 @@ export default class MobStore {
         }
       }
       if (Object.keys(diff).length && typeof this.afterUpdate == 'function') {
-        callbacks.push(this.afterUpdate.bind(instance));
+        callbacks.push(this.afterUpdate.bind(this, instance, diff));
       }
     } else {
       instance = new this.type.instanceConstructor(object);
       this[this.collectionName].push(instance);
       if (typeof this.afterAdd == 'function') {
-        callbacks.push(this.afterAdd.bind(instance));
+        callbacks.push(this.afterAdd.bind(this, instance));
       }
     }
 
     if (typeof this.afterInject == 'function' && !this.injectCallbackCache.includes(`${this.type}:${instance.id}`)) {
-      callbacks.push(this.afterInject.bind(instance));
+      callbacks.push(this.afterInject.bind(this, instance));
       // keep a list of which ones we've already added, because it's possible to pass over the same
       // object twice in the same injection
       this.injectCallbackCache.push(`${this.type}:${instance.id}`);
@@ -185,6 +185,15 @@ export default class MobStore {
 
   static clearStores() {
     stores = [];
+  }
+
+  // fast way to merge two arrays, per https://jsperf.com/array-prototype-push-apply-vs-concat/5
+  static merge(a,b) {
+    let c = b.length;
+    let i = 0;
+    for (; i < c; ++i) {
+      a.push(b[i]);
+    }
   }
 
 }

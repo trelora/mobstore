@@ -103,7 +103,7 @@ var MobStore = function () {
           var instance = _pushOrMerge.instance;
           var callbacks = _pushOrMerge.callbacks;
 
-          callbackFns.push.apply(callbacks);
+          MobStore.merge(callbackFns, callbacks);
           var associatedObjects = _this.type.associatedObjectsFor(obj);
 
           associatedObjects.forEach(function (_ref2) {
@@ -154,18 +154,18 @@ var MobStore = function () {
           }
         }
         if (Object.keys(diff).length && typeof this.afterUpdate == 'function') {
-          callbacks.push(this.afterUpdate.bind(instance));
+          callbacks.push(this.afterUpdate.bind(this, instance, diff));
         }
       } else {
         instance = new this.type.instanceConstructor(object);
         this[this.collectionName].push(instance);
         if (typeof this.afterAdd == 'function') {
-          callbacks.push(this.afterAdd.bind(instance));
+          callbacks.push(this.afterAdd.bind(this, instance));
         }
       }
 
       if (typeof this.afterInject == 'function' && !this.injectCallbackCache.includes(this.type + ':' + instance.id)) {
-        callbacks.push(this.afterInject.bind(instance));
+        callbacks.push(this.afterInject.bind(this, instance));
         // keep a list of which ones we've already added, because it's possible to pass over the same
         // object twice in the same injection
         this.injectCallbackCache.push(this.type + ':' + instance.id);
@@ -245,6 +245,18 @@ var MobStore = function () {
     key: 'clearStores',
     value: function clearStores() {
       stores = [];
+    }
+
+    // fast way to merge two arrays, per https://jsperf.com/array-prototype-push-apply-vs-concat/5
+
+  }, {
+    key: 'merge',
+    value: function merge(a, b) {
+      var c = b.length;
+      var i = 0;
+      for (; i < c; ++i) {
+        a.push(b[i]);
+      }
     }
   }]);
 
