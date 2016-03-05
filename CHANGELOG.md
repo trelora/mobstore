@@ -1,3 +1,7 @@
+### 0.4.1
+
+- performance enhancements and fix for (as yet undocumented) add/update/inject callbacks
+
 ### 0.4.0
 
 - major refactor of the code for clarity and cleanliness
