@@ -135,7 +135,8 @@ const postStore = new MobStore({
       type: &quot;person&quot;,
       plural: false,
       inverse: {
-        key: &quot;post&quot;
+        key: &quot;posts&quot;,
+        plural: true
       }
     }
   ]
@@ -173,8 +174,7 @@ const peopleStore = new MobStore({
       type: &quot;post&quot;,
       plural: true,
       inverse: {
-        key: &quot;author&quot;,
-        plural: true
+        key: &quot;author&quot;
       }
     },
     {
@@ -216,7 +216,7 @@ const peopleStore = new MobStore({
       }
     }
   ]
-}
+};
 
 postStore.inject(dataFromServer);
 </code></pre>
@@ -240,8 +240,8 @@ commentStore.comments
 </code></pre>
 
 <p>All of the references are hooked up like you would expect.</p>
-<pre><code class="javascript">peopleStore.people[0].posts[0].comments[0].author
-// {id:13, name: &quot;Aldous Huxley&quot;, posts: [...], comments: [...]}
+<pre><code class="javascript">peopleStore.find(12).posts[0].comments[0].commenter.name
+// &quot;Aldous Huxley&quot;
 </code></pre>
 
 <h2 id="use-with-react">Use with React</h2>
@@ -266,13 +266,25 @@ commentStore.inject({
   text: &quot;Spam&quot;,
   post: { id: 42},
   author: { id: 12 }
-})
+});
+
+commentStore.find(5).post.author.name
+// &quot;Mark Twain&quot;
 
 //...
 
 // update the author's name. this will show immediately in the UI if the name field is used somewhere.
-const mark = peopleStore.people[0]
+const mark = peopleStore.find(12);
 mark.name = &quot;Twark Main&quot;
+
+//...
+
+postStore.posts[0].author.name
+// &quot;Twark Main&quot;
+
+commentStore.find(5).post.author.name
+// &quot;Twark Main&quot;
+
 
 </code></pre>
               
