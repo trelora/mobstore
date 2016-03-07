@@ -71,13 +71,15 @@ export default class MobStore {
 
         associatedObjects.forEach(({typeName, association, value}) => {
           const assocStore = MobStore.storeForType(typeName);
-          let aInstances;
-          if (value) {
-            let result = assocStore.inject(value, level + 1, callbackFns);
-            aInstances = result.instances;
-            callbackFns = result.callbackFns;
+          if (assocStore) {
+            let aInstances;
+            if (value) {
+              let result = assocStore.inject(value, level + 1, callbackFns);
+              aInstances = result.instances;
+              callbackFns = result.callbackFns;
+            }
+            association.assign(instance, aInstances);
           }
-          association.assign(instance, aInstances);
         });
 
         return instance;
