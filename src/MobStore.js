@@ -41,9 +41,10 @@ export default class MobStore {
     this.afterUpdate = afterUpdate;
     this.afterInject = afterInject;
 
-    extendObservable(this, {
-      [collectionName]: []
-    });
+    let coolObj = {};
+    coolObj[collectionName] = [];
+
+    extendObservable(this, coolObj);
 
     this.injectCallbackCache = [];
 
@@ -106,15 +107,15 @@ export default class MobStore {
   pushOrMerge(object) {
     let callbacks = [];
     let instance = this.find(object.id);
-    if (instance) {
+    if (instance && Object.keys(instance).length > 0) {
       const diff = MobStore.diff(instance, object);
       for (let key in diff) {
         if (instance.hasOwnProperty[key]) {
           instance[key] = diff[key].newValue;
         } else {
-          extendObservable(instance, {
-            [key]: diff[key].newValue
-          });
+          let tmp = {};
+          tmp[key] = diff[key].newValue;
+          extendObservable(instance, tmp);
         }
       }
       if (Object.keys(diff).length && typeof this.afterUpdate == 'function') {

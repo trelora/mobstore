@@ -15,8 +15,6 @@ var _Type2 = _interopRequireDefault(_Type);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var stores = [];
@@ -71,7 +69,10 @@ var MobStore = function () {
     this.afterUpdate = afterUpdate;
     this.afterInject = afterInject;
 
-    (0, _mobx.extendObservable)(this, _defineProperty({}, collectionName, []));
+    var coolObj = {};
+    coolObj[collectionName] = [];
+
+    (0, _mobx.extendObservable)(this, coolObj);
 
     this.injectCallbackCache = [];
 
@@ -146,13 +147,15 @@ var MobStore = function () {
     value: function pushOrMerge(object) {
       var callbacks = [];
       var instance = this.find(object.id);
-      if (instance) {
+      if (instance && Object.keys(instance).length > 0) {
         var diff = MobStore.diff(instance, object);
         for (var key in diff) {
           if (instance.hasOwnProperty[key]) {
             instance[key] = diff[key].newValue;
           } else {
-            (0, _mobx.extendObservable)(instance, _defineProperty({}, key, diff[key].newValue));
+            var tmp = {};
+            tmp[key] = diff[key].newValue;
+            (0, _mobx.extendObservable)(instance, tmp);
           }
         }
         if (Object.keys(diff).length && typeof this.afterUpdate == 'function') {
