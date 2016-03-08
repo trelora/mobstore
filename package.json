@@ -1,6 +1,6 @@
 {
   "name": "mobstore",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "A javascript data-store layer based on the excellent MobX TFRP library",
   "repository": "https://github.com/trelora/mobstore",
   "main": "dist/index.js",
