@@ -1,3 +1,7 @@
+### 0.4.3
+
+- stop using babel's dynamic object key
+
 ### 0.4.2
 
 - minor bugfix: now if you specify an association but no store exists with that type, it will silently ignore the association instead of throwing an error.
