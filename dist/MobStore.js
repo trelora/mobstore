@@ -112,13 +112,15 @@ var MobStore = function () {
             var value = _ref2.value;
 
             var assocStore = MobStore.storeForType(typeName);
-            var aInstances = undefined;
-            if (value) {
-              var result = assocStore.inject(value, level + 1, callbackFns);
-              aInstances = result.instances;
-              callbackFns = result.callbackFns;
+            if (assocStore) {
+              var aInstances = undefined;
+              if (value) {
+                var result = assocStore.inject(value, level + 1, callbackFns);
+                aInstances = result.instances;
+                callbackFns = result.callbackFns;
+              }
+              association.assign(instance, aInstances);
             }
-            association.assign(instance, aInstances);
           });
 
           return instance;
