@@ -77,6 +77,9 @@
                 <li class="toctree-l3"><a href="#es6-class-example">ES6 Class example</a></li>
                 
             
+                <li class="toctree-l3"><a href="#react-component">React Component</a></li>
+                
+            
             </ul>
         
     </li>
@@ -119,6 +122,7 @@
 <p>This also shows how you can add instance methods to the items that you inject into the store.</p>
 <pre><code class="javascript">import {computed} from 'mobx';
 import {MobStore} from 'mobstore';
+import api from 'fictional-api'; // MobStore does not do any network requests.
 
 class ItemStore extends MobStore {
 
@@ -133,25 +137,47 @@ class ItemStore extends MobStore {
           return this.created_at &gt; 10.days.ago // pseudo-code but you get the idea.
         }
       }
-    })
+    });
 
-    // use itemStore.newItems in a view. Then, whenever any item's data is updated,
-    // this will automatically recompute and re-render your view, if the result
-    // of this filtered list changed.
-    @computed get newItems() {
-      return this.items.filter((item) =&gt; {
-        return item.isNew();
+    extendObservable(this, {
+      progress: false,
+      errorMessage: null
+    });
+  }
+
+  // use itemStore.newItems in a view. Then, whenever any item's data is updated,
+  // this will automatically recompute and re-render your view, if the result
+  // of this filtered list changed.
+  @computed get newItems() {
+    return this.items.filter((item) =&gt; {
+      return item.isNew();
+    });
+  }
+
+  // call this whenever you want to get new items from the server, or update with
+  // any changes since you last checked.
+  fetchAllItems() {
+    api.get('/items.json')
+      .then(({data}) =&gt; {
+        this.inject(data); // assuming data is an array of item objects, or a single object
+      })
+  }
+
+  // here is your flux async action. it's much simpler now, with mobx and mobstore.
+  // this method is the &quot;action creator&quot;. to create the action, just call the method.
+  // setting the data is your &quot;reducer&quot; -- it changes the data. The UI is updated automatically.
+  createItem(some_form_data) {
+    this.progress = true;
+    api.post('/items', some_form_data)
+      .then(({data}) =&gt; {
+        this.inject(data);
+        this.progress = false;
+        this.errorMessage = null;
+      })
+      .catch(({errorMessage}) =&gt; {
+        this.progress = false;
+        this.errorMessage = errorMessage;
       });
-    }
-
-    // call this whenever you want to get new items from the server, or update with
-    // any changes since you last checked.
-    fetchAllItems() {
-      fetch('/items.json')
-        .then(({data}) =&gt; {
-          this.inject(data); // assuming data is an array of item objects, or a single object
-        })
-    }
   }
 
 }
@@ -161,7 +187,12 @@ class ItemStore extends MobStore {
 const itemStore = new ItemStore();
 
 //...
+</code></pre>
 
+<h2 id="react-component">React Component</h2>
+<p>Here's how you could use the reactive data from the store above in a React component. Notice how we just supply the <code>itemStore</code>'s computed/observable values directly. There is no other boilerplate needed. Hook up a form submission to the <code>createItem</code> method and watch your list view update automatically.</p>
+<p>In real life you'd probably only want the parent "container component" to import and use the store directly. See <a href="https://medium.com/@learnreact/container-components-c0e67432e005#.nms4vveql">Container Components</a>.</p>
+<pre><code class="javascript">
 @observer
 class NewItemList extends React.Component {
   renderItem(item) {
@@ -173,6 +204,10 @@ class NewItemList extends React.Component {
   render() {
     return (
       &lt;div&gt;
+        &lt;ProgressSpinner visible={itemStore.progress} /&gt;
+        &lt;ErrorMessage
+          visible={itemStore.errorMessage &amp;&amp; itemStore.errorMessage.length}
+          message={itemStore.errorMessage} /&gt;
         {itemStore.newItems.map(this.renderItem)}
       &lt;/div&gt;
     );
