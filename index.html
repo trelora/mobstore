@@ -65,6 +65,10 @@
             
                 <li class="toctree-l3"><a href="#description">Description</a></li>
                 
+                    <li><a class="toctree-l4" href="#current-status">Current status</a></li>
+                
+                    <li><a class="toctree-l4" href="#missing-features">Missing features</a></li>
+                
             
                 <li class="toctree-l3"><a href="#hello-mobstore">Hello MobStore</a></li>
                 
@@ -130,6 +134,16 @@
 <p>MobStore is a thin layer on top of the brilliant Transparent Functional Reactive Programming library MobX. See <a href="http://mobxjs.github.io/mobx/">MobX (formerly mobservable)</a> for more information.</p>
 <p>MobStore takes hierarchical JSON data and turns it back into a graph.</p>
 <p>MobStore automatically hooks up bidirectional, potentially circular references based on the associations you define, and makes the entire graph reactive, so you can change any part of your data and see the results in your UI immediately.</p>
+<p>MobStore is an alternative to Flux/Redux. The unidirectional data-flow is still there, but instead of having a Rube Goldberg machine of action creators and reducers in order to change your data, you can just call a method. And there's no need to flatten your data or deal with a global state tree. You can have a proper graph of data on the client.</p>
+<h3 id="current-status">Current status</h3>
+<p>This is being used in production at Trelora, inc. It works great for our needs. However, we have only added the features we need as we need them, so there is probably still missing functionality.</p>
+<h3 id="missing-features">Missing features</h3>
+<ul>
+<li>There is currently no way to remove data from a store. TODO: <code>myStore.eject(id_or_ids)</code>, <code>myStore.clear()</code></li>
+<li>There is no automatic way to inject data formatted in HAL, JSONAPI, etc. Would be nice to add a parser/adapter layer to be able to easily inject different data formats.</li>
+<li>MobStore does not do any server communication. Not sure whether it ever will, but currently getting the actual data is up to you.</li>
+<li>What else? File an issue.</li>
+</ul>
 <h2 id="hello-mobstore">Hello MobStore</h2>
 <pre><code class="javascript">import {MobStore} from 'mobstore';
 
@@ -139,6 +153,9 @@ const itemStore = new MobStore({
 });
 
 itemStore.inject({id: 1, name: &quot;item one&quot;})
+
+itemStore.items
+// =&gt; [{id: 1, name: &quot;item one&quot;}]
 
 itemStore.find(1)
 // =&gt; {id: 1, name: &quot;item one&quot;}
@@ -188,5 +205,5 @@ itemStore.find(1)
 
 <!--
 MkDocs version : 0.15.3
-Build Date UTC : 2016-03-09 05:47:23.769686
+Build Date UTC : 2016-03-09 05:59:37.542500
 -->
