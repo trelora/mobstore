@@ -3,3 +3,4 @@ theme: readthedocs
 pages:
   - Home: index.md
   - Overview: overview.md
+  - Class Example: class_example.md
