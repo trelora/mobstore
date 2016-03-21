@@ -355,6 +355,9 @@ test('MobStore associations inverse', t => {
   t.equal(theItem.list, theList,
           'the item is automatically populated with the "inverse" relationship to the list');
 
+  t.equal(theList.listEntries[0].list.listEntries[0].list.listEntries[0].list.listEntries[0], theItem,
+          "the references go 'round and 'round");
+
   t.end();
 });
 
