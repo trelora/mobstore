@@ -1,3 +1,7 @@
+### Unreleased
+
+- disallow multiple stores of the same `type`. MobStore only knows how to work with one of each anyway. This is a good thing. You can use "sidecar" stores to have multiple sub-stores. Examples/docs to come.
+
 ### 0.4.3
 
 - stop using babel's dynamic object key
