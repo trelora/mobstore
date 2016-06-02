@@ -17,7 +17,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var stores = [];
+var $stores = {};
+var $inject = Symbol('inject');
+var $pushOrMerge = Symbol('pushOrMerge');
 
 /**
  * Base class for making observable datastores.
@@ -56,6 +58,10 @@ var MobStore = function () {
 
     _classCallCheck(this, MobStore);
 
+    if (undefined !== $stores[type]) {
+      throw new Error('It is not allowed to create duplicate MobStore instances. Only create one per `type`');
+    }
+
     this.collectionName = collectionName;
 
     /// TODO reject/throw if type by this name already exists.
@@ -76,7 +82,7 @@ var MobStore = function () {
 
     this.injectCallbackCache = [];
 
-    stores.push(this);
+    $stores[type] = this;
   }
 
   _createClass(MobStore, [{
@@ -86,10 +92,13 @@ var MobStore = function () {
     /**
      * Inject JSON data into this store.
      * @param {Object|Object[]} jsondata - A single instance or an array of instances to inject into this store.
-     * @param {number} level - internal use only
-     * @param {function[]} callbackFns - internal use only
      */
     value: function inject(jsondata) {
+      return this[$inject](jsondata);
+    }
+  }, {
+    key: $inject,
+    value: function value(jsondata) {
       var _this = this;
 
       var level = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
@@ -99,10 +108,10 @@ var MobStore = function () {
 
       return (0, _mobx.transaction)(function () {
         var instances = objs.map(function (obj) {
-          var _pushOrMerge = _this.pushOrMerge(obj);
+          var _$pushOrMerge = _this[$pushOrMerge](obj);
 
-          var instance = _pushOrMerge.instance;
-          var callbacks = _pushOrMerge.callbacks;
+          var instance = _$pushOrMerge.instance;
+          var callbacks = _$pushOrMerge.callbacks;
 
           MobStore.merge(callbackFns, callbacks);
           var associatedObjects = _this.type.associatedObjectsFor(obj);
@@ -116,7 +125,7 @@ var MobStore = function () {
             if (assocStore) {
               var aInstances = undefined;
               if (value) {
-                var result = assocStore.inject(value, level + 1, callbackFns);
+                var result = assocStore[$inject](value, level + 1, callbackFns);
                 aInstances = result.instances;
                 callbackFns = result.callbackFns;
               }
@@ -143,8 +152,8 @@ var MobStore = function () {
       });
     }
   }, {
-    key: 'pushOrMerge',
-    value: function pushOrMerge(object) {
+    key: $pushOrMerge,
+    value: function value(object) {
       var callbacks = [];
       var instance = this.find(object.id);
       if (instance && Object.keys(instance).length > 0) {
@@ -242,14 +251,12 @@ var MobStore = function () {
   }, {
     key: 'storeForType',
     value: function storeForType(typeName) {
-      return stores.find(function (s) {
-        return s.type.name == typeName;
-      });
+      return $stores[typeName];
     }
   }, {
     key: 'clearStores',
     value: function clearStores() {
-      stores = [];
+      $stores = {};
     }
 
     // fast way to merge two arrays, per https://jsperf.com/array-prototype-push-apply-vs-concat/5
