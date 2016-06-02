@@ -1,6 +1,7 @@
-### Unreleased
+### 0.4.4
 
 - disallow multiple stores of the same `type`. MobStore only knows how to work with one of each anyway. This is a good thing. You can use "sidecar" stores to have multiple sub-stores. Examples/docs to come.
+- add .npmignore so we don't publish the .babelrc, which can lead to problems, especially with React Native
 
 ### 0.4.3
 
