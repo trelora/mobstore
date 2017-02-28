@@ -640,3 +640,73 @@ test("MobStore overwriting a plural association with null", t => {
 
 });
 
+test("MobStore eject", t => {
+  MobStore.clearStores();
+
+  const store = new MobStore({
+    collectionName: "items",
+    type: "item"
+  });
+
+  let testObserver;
+
+  autorun(() => {
+    if (store.items.length)
+      testObserver = store.items[0];
+  });
+
+  t.deepEqual(testObserver, undefined,
+              "as a sanity check, the testObserver starts out undefined");
+
+  store.inject([
+    {
+      id: 42,
+      name: "Foo Item"
+    },
+    {
+      id: 43,
+      name: "Bar Item"
+    },
+    {
+      id: 44,
+      name: "Boo Item"
+    },
+    {
+      id: 45,
+      name: "Far Item"
+    }
+  ]);
+
+  t.equal(store.items.length, 4,
+          "injecting 4 items saves it in the store");
+
+  t.deepEqual(testObserver, {id: 42, name: "Foo Item", type: 'item'},
+              "an observer gets updated when an item is injected");
+
+
+  store.eject(43);
+
+
+  t.equal(store.items.length, 3,
+          "ejecting one item by id removes it from store");
+
+  t.deepEqual(store.items.map(i => i.id), [42, 44, 45],
+              "ejecting one item leaves all other items in store");
+
+
+  store.eject([42, 45])
+
+
+  t.equal(store.items.length, 1,
+          "ejecting multiple items by id removes them from store");
+
+
+  t.deepEqual(store.items.map(i => i.id), [44],
+              "ejecting multiple items leaves all other items in store");
+
+  t.deepEqual(testObserver, {id: 44, name: 'Boo Item', type: 'item'},
+              "an observer gets updated when an item is ejected");
+
+  t.end();
+
+});

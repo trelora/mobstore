@@ -163,6 +163,15 @@ export default class MobStore {
     return this.collection.findIndex(obj => obj.id == id);
   }
 
+  /**
+   * Eject(remove) object/objects from store.
+   * @param {id|id[]} - A single id or an array of ids to eject from this store.
+   */
+  eject(id) {
+    const ids = id instanceof Array ? id : [id];
+    ids.forEach(i => this.collection.splice(this.findIndex(i), 1));
+  }
+
   static wrap(jsondata) {
     let objs;
     // make it easier to work with.
