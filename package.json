@@ -16,7 +16,7 @@
     "babel-polyfill": "^6.6.1"
   },
   "peerDependencies": {
-    "mobx": "^2.0.0"
+    "mobx": "^3.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.6.0",
