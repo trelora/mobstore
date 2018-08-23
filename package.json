@@ -1,12 +1,13 @@
 {
   "name": "mobstore",
-  "version": "0.4.4",
+  "version": "1.0.0",
   "description": "A javascript data-store layer based on the excellent MobX TFRP library",
   "repository": "https://github.com/trelora/mobstore",
   "main": "dist/index.js",
   "scripts": {
     "test": "karma start",
     "build": "babel src --out-dir dist",
+    "create": "yarn run build -- --watch",
     "build_and_publish": "npm run build && npm publish",
     "coveralls": "cat ./coverage/lcov/lcov.info | ./node_modules/.bin/coveralls"
   },
@@ -17,7 +18,7 @@
     "webpack": "^4.16.1"
   },
   "peerDependencies": {
-    "mobx": "^4.3.0"
+    "mobx": "^5.0.4"
   },
   "devDependencies": {
     "babel-cli": "^6.6.0",

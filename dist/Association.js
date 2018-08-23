@@ -15,10 +15,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Association = function () {
   function Association(_ref) {
-    var key = _ref.key;
-    var type = _ref.type;
-    var plural = _ref.plural;
-    var inverse = _ref.inverse;
+    var key = _ref.key,
+        type = _ref.type,
+        plural = _ref.plural,
+        inverse = _ref.inverse;
 
     _classCallCheck(this, Association);
 
@@ -67,8 +67,8 @@ var Association = function () {
           if (existing) {
             // no-op. it's already there, and has already been injected/updated.
           } else {
-              aObject[_this.inverse.key].push(object);
-            }
+            aObject[_this.inverse.key].push(object);
+          }
         } else {
           aObject[_this.inverse.key] = object;
         }

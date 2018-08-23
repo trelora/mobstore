@@ -23,9 +23,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Type = function () {
   function Type(_ref) {
-    var name = _ref.name;
-    var associations = _ref.associations;
-    var instanceMethods = _ref.instanceMethods;
+    var name = _ref.name,
+        associations = _ref.associations,
+        instanceMethods = _ref.instanceMethods;
 
     _classCallCheck(this, Type);
 

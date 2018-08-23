@@ -46,15 +46,14 @@ var MobStore = function () {
    * @param {string} options.type - The singular name of the type. This is the key that will bind it to other stores via associations.
    * @param {Object[]} options.associations - Array of associations to connect this type to another store.
    */
-
   function MobStore(_ref) {
-    var collectionName = _ref.collectionName;
-    var type = _ref.type;
-    var associations = _ref.associations;
-    var instanceMethods = _ref.instanceMethods;
-    var afterInject = _ref.afterInject;
-    var afterAdd = _ref.afterAdd;
-    var afterUpdate = _ref.afterUpdate;
+    var collectionName = _ref.collectionName,
+        type = _ref.type,
+        associations = _ref.associations,
+        instanceMethods = _ref.instanceMethods,
+        afterInject = _ref.afterInject,
+        afterAdd = _ref.afterAdd,
+        afterUpdate = _ref.afterUpdate;
 
     _classCallCheck(this, MobStore);
 
@@ -101,29 +100,28 @@ var MobStore = function () {
     value: function value(jsondata) {
       var _this = this;
 
-      var level = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
-      var callbackFns = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
+      var level = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+      var callbackFns = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
 
       var objs = MobStore.wrap(jsondata);
 
       return (0, _mobx.transaction)(function () {
         var instances = objs.map(function (obj) {
-          var _$pushOrMerge = _this[$pushOrMerge](obj);
-
-          var instance = _$pushOrMerge.instance;
-          var callbacks = _$pushOrMerge.callbacks;
+          var _$pushOrMerge = _this[$pushOrMerge](obj),
+              instance = _$pushOrMerge.instance,
+              callbacks = _$pushOrMerge.callbacks;
 
           MobStore.merge(callbackFns, callbacks);
           var associatedObjects = _this.type.associatedObjectsFor(obj);
 
           associatedObjects.forEach(function (_ref2) {
-            var typeName = _ref2.typeName;
-            var association = _ref2.association;
-            var value = _ref2.value;
+            var typeName = _ref2.typeName,
+                association = _ref2.association,
+                value = _ref2.value;
 
             var assocStore = MobStore.storeForType(typeName);
             if (assocStore) {
-              var aInstances = undefined;
+              var aInstances = void 0;
               if (value) {
                 var result = assocStore[$inject](value, level + 1, callbackFns);
                 aInstances = result.instances;
@@ -222,7 +220,7 @@ var MobStore = function () {
   }], [{
     key: 'wrap',
     value: function wrap(jsondata) {
-      var objs = undefined;
+      var objs = void 0;
       // make it easier to work with.
       if (jsondata instanceof Array) {
         objs = jsondata;
